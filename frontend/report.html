@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Final Evaluation Report - AI Interview Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Navbar -->
+    <header class="navbar">
+      <a href="/" class="brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">AI Interview Room</span>
+      </a>
+      <div class="nav-links btn-print-hide">
+        <button class="btn btn-secondary btn-sm" onclick="window.print()">🖨️ Print / PDF</button>
+        <a href="/recruiter.html" class="btn btn-primary btn-sm">Recruiter Hub ➔</a>
+      </div>
+    </header>
+
+    <!-- Report Header -->
+    <div class="report-header">
+      <div>
+        <span class="badge-tag badge-adaptive" style="margin-bottom: 8px;">Technical Assessment Report</span>
+        <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px;" id="candidateTitle">
+          Candidate Evaluation
+        </h1>
+        <p style="font-size: 14px; color: var(--text-secondary);" id="candidateMetadata">
+          Loading report details...
+        </p>
+      </div>
+      <div id="hiringSignalContainer">
+        <!-- Badge inserted by JS -->
+      </div>
+    </div>
+
+    <!-- Hero Score & Executive Breakdown Grid -->
+    <div class="score-hero-grid">
+      <!-- Left: Weighted Score Card -->
+      <div class="glass-card score-card">
+        <div class="score-circle">
+          <span class="score-number" id="weightedScoreVal">--</span>
+          <span class="score-out-of">/ 10.0</span>
+        </div>
+        <div style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">Depth-Weighted Score</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+          Raw Average: <strong id="rawScoreVal">--</strong>/10
+        </div>
+        <p style="font-size: 11px; color: var(--text-secondary); line-height: 1.5; text-align: center; border-top: 1px solid var(--border-glass); padding-top: 10px;">
+          ⚖️ Evaluates difficulty tier weighting to distinguish fundamental knowledge from advanced engineering depth.
+        </p>
+      </div>
+
+      <!-- Right: Executive Summary & Recommendation -->
+      <div class="glass-card" style="padding: 28px;">
+        <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 10px;">Executive Summary</h3>
+        <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.7; margin-bottom: 16px;" id="executiveSummaryText">
+          Loading assessment summary...
+        </p>
+
+        <h4 style="font-size: 14px; font-weight: 700; color: #a5b4fc; margin-bottom: 6px;">Hiring Justification</h4>
+        <p style="font-size: 13px; color: var(--text-primary); line-height: 1.6;" id="hiringReasoningText">
+          Loading reasoning...
+        </p>
+      </div>
+    </div>
+
+    <!-- Difficulty & Topic Matrix Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+      <!-- Difficulty Mastery Meters -->
+      <div class="glass-card" style="padding: 24px;">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Difficulty Mastery Tiers</h3>
+        
+        <div class="difficulty-meter">
+          <div class="meter-header">
+            <span>Basic / Fundamentals</span>
+            <span id="basicScoreText">--%</span>
+          </div>
+          <div class="meter-bar">
+            <div class="meter-fill-basic" id="basicMeterFill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="difficulty-meter">
+          <div class="meter-header">
+            <span>Intermediate</span>
+            <span id="interScoreText">--%</span>
+          </div>
+          <div class="meter-bar">
+            <div class="meter-fill-intermediate" id="interMeterFill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <div class="difficulty-meter">
+          <div class="meter-header">
+            <span>Advanced / Architectural</span>
+            <span id="advScoreText">--%</span>
+          </div>
+          <div class="meter-bar">
+            <div class="meter-fill-advanced" id="advMeterFill" style="width: 0%;"></div>
+          </div>
+        </div>
+
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 14px;" id="depthAnalysisText">
+          Analyzing candidate tier distribution...
+        </p>
+      </div>
+
+      <!-- Topic Performance Breakdown -->
+      <div class="glass-card" style="padding: 24px;">
+        <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 16px;">Topic Performance</h3>
+        <div id="topicsBreakdownContainer" style="display: flex; flex-direction: column; gap: 10px;">
+          <!-- Topic rows injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Strengths & Areas for Improvement Grid -->
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 28px;">
+      <div class="glass-card" style="padding: 24px;">
+        <h3 style="font-size: 16px; font-weight: 700; color: #34d399; margin-bottom: 12px;">Key Strengths</h3>
+        <ul id="strengthsList" style="padding-left: 20px; font-size: 14px; color: var(--text-secondary); line-height: 1.8;">
+          <!-- Strengths injected by JS -->
+        </ul>
+      </div>
+
+      <div class="glass-card" style="padding: 24px;">
+        <h3 style="font-size: 16px; font-weight: 700; color: #fbbf24; margin-bottom: 12px;">Areas for Improvement</h3>
+        <ul id="improvementsList" style="padding-left: 20px; font-size: 14px; color: var(--text-secondary); line-height: 1.8;">
+          <!-- Areas injected by JS -->
+        </ul>
+      </div>
+    </div>
+
+    <!-- Conceptual Knowledge Matrix -->
+    <div class="glass-card" style="padding: 24px; margin-bottom: 28px;">
+      <h3 style="font-size: 16px; font-weight: 700; margin-bottom: 14px;">Conceptual Knowledge Matrix</h3>
+      <div style="margin-bottom: 16px;">
+        <div style="font-size: 12px; font-weight: 600; color: var(--color-basic); margin-bottom: 8px; text-transform: uppercase;">
+          Demonstrated Concepts
+        </div>
+        <div id="demonstratedConceptsCloud">
+          <!-- Concepts injected by JS -->
+        </div>
+      </div>
+
+      <div>
+        <div style="font-size: 12px; font-weight: 600; color: var(--color-danger); margin-bottom: 8px; text-transform: uppercase;">
+          Unconfirmed / Missing Concepts
+        </div>
+        <div id="missingConceptsCloud">
+          <!-- Concepts injected by JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Complete Expandable Transcript -->
+    <div class="glass-card" style="padding: 28px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <div>
+          <h3 style="font-size: 18px; font-weight: 700;">Complete Interview Transcript & Adaptive Trace</h3>
+          <p style="font-size: 13px; color: var(--text-secondary);">
+            Review every question, candidate response, multi-faceted score, and the internal adaptive engine logic.
+          </p>
+        </div>
+      </div>
+
+      <div id="transcriptList">
+        <!-- Transcript cards injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <script src="/static/js/report.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assessment Room | AI Interview Room</title>
+  <meta name="description" content="Online assessment room conducting adaptive technical interviews.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .completion-container {
+      display: none;
+      text-align: center;
+      padding: 60px 24px;
+    }
+    .completion-container.active {
+      display: block;
+      animation: modalIn 0.3s ease-out;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navbar / Session Header -->
+    <header class="navbar">
+      <a href="/candidate-dashboard.html" class="brand">
+        <div class="brand-icon">⚡</div>
+        <div>
+          <div class="brand-name" id="interviewHeaderTitle">AI Assessment Room</div>
+          <div style="font-size: 11px; color: var(--text-muted); font-weight: 500;" id="sessionCandidateInfo">
+            Role: Software Engineer
+          </div>
+        </div>
+      </a>
+      <div class="nav-links">
+        <span class="badge-tag badge-adaptive" id="sessionTimerBadge">⏱️ Time: 00:00</span>
+        <button class="btn btn-secondary btn-sm" id="endInterviewEarlyBtn">Exit to Dashboard</button>
+      </div>
+    </header>
+
+    <!-- Progress Indicator -->
+    <div id="progressSection" style="margin-bottom: 24px;">
+      <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; color: var(--text-secondary); margin-bottom: 6px;">
+        <span id="questionProgressText">Question 1 of 5</span>
+        <span id="progressPercentageText">20% Complete</span>
+      </div>
+      <div class="progress-bar-container">
+        <div class="progress-bar-fill" id="progressBarFill" style="width: 20%;"></div>
+      </div>
+    </div>
+
+    <!-- Main Interview Stage Grid -->
+    <div class="interview-grid" id="interviewMainGrid">
+      <!-- Left Column: Interviewer AI Persona -->
+      <aside class="glass-card interviewer-card">
+        <div class="avatar-wrapper">
+          <div class="avatar-pulse"></div>
+          <div class="interviewer-avatar">🤖</div>
+        </div>
+        <h3 class="interviewer-name">Adaptive AI Interviewer</h3>
+        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 12px;">Technical Assessment Engine</p>
+
+        <div class="interviewer-status">
+          <span class="status-dot" id="statusDot"></span>
+          <span id="interviewerStatusText">Listening to candidate</span>
+        </div>
+
+        <div style="margin-top: 20px; text-align: left;">
+          <div class="session-stat">
+            <span class="session-stat-label">Assessment Area</span>
+            <span class="session-stat-val" id="activeTopicVal">Core Principles</span>
+          </div>
+          <div class="session-stat">
+            <span class="session-stat-label">Target Role</span>
+            <span class="session-stat-val" id="activeRoleVal">Software Engineer</span>
+          </div>
+          <div class="session-stat">
+            <span class="session-stat-label">Session Ref</span>
+            <span class="session-stat-val" id="sessionShortId" style="font-family: var(--font-mono); font-size: 11px;">#---</span>
+          </div>
+        </div>
+
+        <div style="margin-top: 24px; padding: 14px; background: rgba(255, 255, 255, 0.03); border: 1px solid var(--border-glass); border-radius: 12px; font-size: 12px; color: var(--text-muted); text-align: left;">
+          💡 <strong>Assessment Tip:</strong> Be concise, explain your reasoning, and highlight technical tradeoffs in your responses.
+        </div>
+      </aside>
+
+      <!-- Right Column: Interactive Stage -->
+      <main class="glass-card stage-card" style="position: relative;">
+        <!-- Evaluating Transition Overlay (Candidate sees professional loading state) -->
+        <div class="eval-overlay" id="evalOverlay">
+          <div class="spinner"></div>
+          <h3 style="font-size: 18px; font-weight: 700;">Analyzing your response...</h3>
+          <p style="font-size: 13px; color: var(--text-secondary); max-width: 360px; text-align: center;" id="evalOverlayMessage">
+            The adaptive engine is evaluating your explanation and preparing the next question.
+          </p>
+        </div>
+
+        <!-- Question Header & Badges (ZERO difficulty or score leakage) -->
+        <div class="stage-header">
+          <div class="stage-badges">
+            <span class="badge-tag badge-adaptive" id="questionBadge">Question 1</span>
+            <span class="badge-tag" id="topicBadge">Topic: Technical</span>
+          </div>
+        </div>
+
+        <!-- Question Display -->
+        <div class="question-text-box">
+          <div class="question-text" id="questionText">
+            Loading assessment question...
+          </div>
+        </div>
+
+        <!-- Answer Input -->
+        <form id="answerForm">
+          <label for="candidateAnswer" style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; margin-bottom: 6px;">
+            <span>Your Technical Response</span>
+            <span id="charCount" style="color: var(--text-muted); font-size: 12px;">0 characters</span>
+          </label>
+          <textarea
+            id="candidateAnswer"
+            name="candidateAnswer"
+            class="answer-area"
+            placeholder="Type your technical explanation, architectural reasoning, or code snippets here..."
+            required
+          ></textarea>
+
+          <div class="stage-footer">
+            <div class="shortcut-hint">
+              Press <kbd>Ctrl</kbd> + <kbd>Enter</kbd> to submit response
+            </div>
+            <button type="submit" class="btn btn-primary" id="submitAnswerBtn">
+              <span>Submit Answer</span>
+              <span>➔</span>
+            </button>
+          </div>
+        </form>
+      </main>
+    </div>
+
+    <!-- Completion Screen (ZERO SCORES DISPLAYED) -->
+    <div class="glass-card completion-container" id="completionScreen">
+      <div style="width: 72px; height: 72px; border-radius: 50%; background: rgba(16, 185, 129, 0.15); border: 2px solid rgba(16, 185, 129, 0.4); display: flex; align-items: center; justify-content: center; font-size: 32px; margin: 0 auto 20px auto; color: var(--color-basic);">
+        ✓
+      </div>
+      <h2 style="font-size: 26px; font-weight: 700; margin-bottom: 10px;">Interview Completed Successfully</h2>
+      <p style="color: var(--text-secondary); max-width: 540px; margin: 0 auto 24px auto; font-size: 15px; line-height: 1.6;">
+        Thank you for completing this technical assessment. Your responses have been submitted to the recruitment team for evaluation. You may now return to your candidate dashboard.
+      </p>
+      <div style="display: flex; gap: 14px; justify-content: center;">
+        <a href="/candidate-dashboard.html" class="btn btn-primary" style="padding: 12px 28px;">
+          Return to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/static/js/interview.js"></script>
+</body>
+</html>

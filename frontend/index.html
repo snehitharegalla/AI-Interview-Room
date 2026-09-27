@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Interview Room | Adaptive Technical Recruitment Platform</title>
+  <meta name="description" content="Enterprise GenAI interview platform that conducts truly adaptive technical interviews where the next question depends on the candidate's previous answer.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .hero-cta-group {
+      display: flex;
+      gap: 16px;
+      justify-content: center;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+    .flow-step-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: var(--transition-fast);
+    }
+    .flow-step-box:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-2px);
+    }
+    .flow-step-num {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--accent-gradient);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      font-size: 16px;
+      flex-shrink: 0;
+    }
+    .auth-tab {
+      flex: 1;
+      padding: 12px;
+      text-align: center;
+      font-weight: 600;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      color: var(--text-secondary);
+      transition: var(--transition-fast);
+    }
+    .auth-tab.active {
+      color: var(--accent-primary);
+      border-bottom-color: var(--accent-primary);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Navbar -->
+    <header class="navbar">
+      <a href="/" class="brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">AI Interview Room</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 14px;">
+        <span class="badge-tag badge-adaptive">● Gen AI Adaptive Engine v2.0</span>
+        <button class="btn btn-secondary" id="btnOpenLoginModal">Sign In</button>
+        <button class="btn btn-primary" id="btnQuickDemoRecruiter">Recruiter Portal</button>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" style="text-align: center; padding: 48px 0 32px 0;">
+      <div style="display: inline-block; padding: 6px 14px; border-radius: 999px; background: rgba(99, 102, 241, 0.15); border: 1px solid rgba(99, 102, 241, 0.3); color: #a5b4fc; font-size: 13px; font-weight: 600; margin-bottom: 16px;">
+        Enterprise Technical Hiring Platform
+      </div>
+      <h1 class="hero-title" style="font-size: 46px; line-height: 1.2; margin-bottom: 18px;">
+        AI-Powered Interviews That <br><span class="gradient-text">Adapt to Every Candidate</span>
+      </h1>
+      <p class="hero-subtitle" style="max-width: 720px; margin: 0 auto; font-size: 17px; color: var(--text-secondary);">
+        Technical interviews shouldn't follow a static script. Our generative cognitive engine continuously diagnoses candidate understanding, probes missing nuances, and dynamically crafts the next question based on the previous answer.
+      </p>
+
+      <div class="hero-cta-group">
+        <button class="btn btn-primary" style="padding: 14px 28px; font-size: 15px;" id="heroRecruiterBtn">
+          <span>Explore Recruiter Hub</span>
+          <span>➔</span>
+        </button>
+        <button class="btn btn-secondary" style="padding: 14px 24px; font-size: 15px;" id="heroCandidateBtn">
+          <span>Candidate Experience</span>
+        </button>
+        <a href="/report.html?id=demo-alex-101" class="btn btn-secondary" style="padding: 14px 24px; font-size: 15px;">
+          <span>Sample AI Evaluation Report</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Interactive Architecture Flow -->
+    <section style="margin: 48px 0;">
+      <div style="text-align: center; margin-bottom: 28px;">
+        <h2 style="font-size: 26px; margin-bottom: 8px;">The Closed-Loop Adaptive Flow</h2>
+        <p style="color: var(--text-muted); font-size: 14px;">How recruiter boundaries and AI cognitive reasoning guide each interview</p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px;">
+        <div class="flow-step-box">
+          <div class="flow-step-num">1</div>
+          <div>
+            <h4 style="font-size: 15px; margin-bottom: 4px;">Recruiter Sets Boundaries</h4>
+            <p style="font-size: 13px; color: var(--text-secondary);">Recruiter configures role, topics, difficulty range, and question categories via 7-step wizard.</p>
+          </div>
+        </div>
+
+        <div class="flow-step-box">
+          <div class="flow-step-num">2</div>
+          <div>
+            <h4 style="font-size: 15px; margin-bottom: 4px;">Candidate Responds</h4>
+            <p style="font-size: 13px; color: var(--text-secondary);">Candidate submits technical answers in a distraction-free, zero-leakage assessment interface.</p>
+          </div>
+        </div>
+
+        <div class="flow-step-box">
+          <div class="flow-step-num">3</div>
+          <div>
+            <h4 style="font-size: 15px; margin-bottom: 4px;">AI Cognitive Diagnosis</h4>
+            <p style="font-size: 13px; color: var(--text-secondary);">Evaluates correctness, understanding depth, identified concepts, and pinpointed missing concepts.</p>
+          </div>
+        </div>
+
+        <div class="flow-step-box">
+          <div class="flow-step-num">4</div>
+          <div>
+            <h4 style="font-size: 15px; margin-bottom: 4px;">Strategic Next Question</h4>
+            <p style="font-size: 13px; color: var(--text-secondary);">Engine decides next strategy: deeper, probe missing nuance, diagnostic check, or rotate topic.</p>
+          </div>
+        </div>
+
+        <div class="flow-step-box">
+          <div class="flow-step-num">5</div>
+          <div>
+            <h4 style="font-size: 15px; margin-bottom: 4px;">Live Knowledge Profile</h4>
+            <p style="font-size: 13px; color: var(--text-secondary);">Continuous skill tracking across basic, intermediate, and advanced levels for recruiter insights.</p>
+          </div>
+        </div>
+
+        <div class="flow-step-box">
+          <div class="flow-step-num">6</div>
+          <div>
+            <h4 style="font-size: 15px; margin-bottom: 4px;">Depth-Weighted Report</h4>
+            <p style="font-size: 13px; color: var(--text-secondary);">Fair scoring eliminates false positives from easy answers, delivering definitive hiring recommendations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: ADAPTIVE INTERVIEWING IN DEPTH -->
+    <section id="adaptive-engine" style="margin: 64px 0;">
+      <div style="text-align: center; margin-bottom: 36px;">
+        <span class="badge-tag badge-adaptive" style="margin-bottom: 10px;">Dynamic Orchestration Engine</span>
+        <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">Adaptive Interviewing: How the Engine Decides</h2>
+        <p style="color: var(--text-secondary); max-width: 680px; margin: 0 auto; font-size: 15px;">
+          Rather than simplistic binary rules (right = harder / wrong = easier), our engine analyzes conceptual depth, pinpointing why an answer succeeded or fell short.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+        <!-- Scenario 1 -->
+        <div class="glass-card" style="padding: 24px; border-left: 4px solid var(--color-basic);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span class="badge-tag badge-basic">Strong Understanding</span>
+            <span style="font-size: 12px; font-weight: 700; color: var(--color-basic);">ACTION: DEEPER</span>
+          </div>
+          <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Architectural Escalation</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+            Candidate accurately articulates principles and runtime tradeoffs. The engine pushes into internal mechanics, high concurrency, or steps up difficulty tier.
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; font-family: var(--font-mono); font-size: 11px; color: #a5b4fc;">
+            Q1 (Basic) ➔ Strong response ➔ Q2 (Intermediate: Edge cases & metadata preservation)
+          </div>
+        </div>
+
+        <!-- Scenario 2 -->
+        <div class="glass-card" style="padding: 24px; border-left: 4px solid var(--color-intermediate);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span class="badge-tag badge-intermediate">Partial Understanding</span>
+            <span style="font-size: 12px; font-weight: 700; color: var(--color-intermediate);">ACTION: PROBE_MISSING</span>
+          </div>
+          <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Surgical Gap Probe</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+            Candidate grasps the high-level concept but omits a critical mechanism. The engine crafts a targeted question testing that exact omitted concept without demoting.
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; font-family: var(--font-mono); font-size: 11px; color: #7dd3fc;">
+            Missed LRU eviction details ➔ Q: Focus specifically on doubly-linked list node removal
+          </div>
+        </div>
+
+        <!-- Scenario 3 -->
+        <div class="glass-card" style="padding: 24px; border-left: 4px solid var(--color-warning);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span class="badge-tag" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3);">First Stumble / Weak</span>
+            <span style="font-size: 12px; font-weight: 700; color: #fbbf24;">ACTION: DIAGNOSTIC</span>
+          </div>
+          <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Stumble Protection</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+            A candidate who struggles on one difficult question is NOT immediately demoted. The engine issues a foundational diagnostic probe to verify true baseline grasp.
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; font-family: var(--font-mono); font-size: 11px; color: #fde68a;">
+            Stumbled on B-Tree node split ➔ Q: Explore fundamental tree traversal before adjusting
+          </div>
+        </div>
+
+        <!-- Scenario 4 -->
+        <div class="glass-card" style="padding: 24px; border-left: 4px solid var(--color-danger);">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <span class="badge-tag badge-advanced">Repeated Evidence</span>
+            <span style="font-size: 12px; font-weight: 700; color: #f87171;">ACTION: EASIER / PIVOT</span>
+          </div>
+          <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 8px;">Evidence-Based Adjustment</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+            Only after gathering repeated evidence of a topic gap does the engine step down difficulty to establish a baseline, or gracefully pivot to another focus area.
+          </p>
+          <div style="background: rgba(0,0,0,0.3); border-radius: 8px; padding: 10px; font-family: var(--font-mono); font-size: 11px; color: #fca5a5;">
+            2+ failed diagnostic probes ➔ Step down to fundamentals or pivot to Data Structures
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: AI EVALUATION & KNOWLEDGE PROFILING -->
+    <section id="ai-evaluation" style="margin: 64px 0;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 28px; align-items: center;">
+        <!-- Left: AI Evaluation Multi-Dimensional Analysis -->
+        <div class="glass-card" style="padding: 32px;">
+          <span class="badge-tag badge-adaptive" style="margin-bottom: 12px;">Multi-Dimensional Analysis</span>
+          <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 14px;">How Answers Are Evaluated</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+            Every response is parsed by our dedicated AI evaluation service into structured criteria before reaching the adaptive engine:
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+              <span style="font-size: 18px;">✅</span>
+              <div>
+                <strong style="font-size: 13px; color: var(--text-primary);">Technical Accuracy & Correctness</strong>
+                <p style="font-size: 12px; color: var(--text-muted);">Classified as Correct, Partially Correct, or Incorrect based on factual soundness.</p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+              <span style="font-size: 18px;">🧠</span>
+              <div>
+                <strong style="font-size: 13px; color: var(--text-primary);">Depth of Understanding</strong>
+                <p style="font-size: 12px; color: var(--text-muted);">Categorized across Strong, Moderate, Partial, or Weak grasp.</p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+              <span style="font-size: 18px;">💡</span>
+              <div>
+                <strong style="font-size: 13px; color: var(--text-primary);">Demonstrated vs. Missing Concepts</strong>
+                <p style="font-size: 12px; color: var(--text-muted);">Extracts validated mechanisms and pinpoints specific omissions or misconceptions.</p>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: flex-start; gap: 12px; padding: 10px; background: rgba(255,255,255,0.02); border-radius: 8px;">
+              <span style="font-size: 18px;">🎯</span>
+              <div>
+                <strong style="font-size: 13px; color: var(--text-primary);">Recommended Strategy</strong>
+                <p style="font-size: 12px; color: var(--text-muted);">Instructs the Adaptive Engine whether to push deeper, probe gaps, or diagnose foundations.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Live Knowledge Profile Simulation -->
+        <div class="glass-card" style="padding: 32px;">
+          <span class="badge-tag badge-basic" style="margin-bottom: 12px;">Real-Time Cognitive Tracking</span>
+          <h3 style="font-size: 24px; font-weight: 700; margin-bottom: 14px;">Live Candidate Knowledge Profile</h3>
+          <p style="font-size: 14px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 20px;">
+            Throughout the interview, a dynamic multi-dimensional knowledge profile is built in real time. Recruiters see exact competency maps; candidates see a focused test room.
+          </p>
+
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 10px; padding: 14px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                <span>Python Core Architecture</span>
+                <span style="color: var(--color-basic);">Strong (92%)</span>
+              </div>
+              <div class="meter-bar">
+                <div class="meter-fill-basic" style="width: 92%;"></div>
+              </div>
+              <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+                ✓ Verified: Closures, Decorators, Metaclass registry, Asyncio multiplexing
+              </div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 10px; padding: 14px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                <span>Data Structures & Algorithms</span>
+                <span style="color: var(--color-intermediate);">Moderate (68%)</span>
+              </div>
+              <div class="meter-bar">
+                <div class="meter-fill-intermediate" style="width: 68%;"></div>
+              </div>
+              <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+                ✓ Hash table collision resolution • ⚠️ Probed: LRU node eviction bounds
+              </div>
+            </div>
+
+            <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-glass); border-radius: 10px; padding: 14px;">
+              <div style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 600; margin-bottom: 6px;">
+                <span>Distributed Systems & Caching</span>
+                <span style="color: var(--color-basic);">Strong (86%)</span>
+              </div>
+              <div class="meter-bar">
+                <div class="meter-fill-basic" style="width: 86%;"></div>
+              </div>
+              <div style="margin-top: 8px; font-size: 11px; color: var(--text-muted);">
+                ✓ Verified: Consistent hashing, Cache stampede mitigations, Write-through
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECTION: RECRUITER ANALYTICS & REPORTS PREVIEW -->
+    <section id="recruiter-analytics" style="margin: 64px 0;">
+      <div style="text-align: center; margin-bottom: 36px;">
+        <span class="badge-tag badge-adaptive" style="margin-bottom: 10px;">Depth-Weighted Fair Hiring</span>
+        <h2 style="font-size: 32px; font-weight: 700; margin-bottom: 8px;">Executive Reports & Recruitment Analytics</h2>
+        <p style="color: var(--text-secondary); max-width: 680px; margin: 0 auto; font-size: 15px;">
+          Eliminating false positives from simple questions. Objective hiring signals backed by depth-weighted performance analysis.
+        </p>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+        <div class="glass-card" style="padding: 24px;">
+          <div style="font-size: 28px; margin-bottom: 12px;">⚖️</div>
+          <h4 style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Depth-Weighted Fair Scoring</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+            Questions are weighted by difficulty tier (1.0x Basic, 1.5x Intermediate, 2.2x Advanced). A candidate who excels only on elementary questions cannot achieve an inflated Senior score.
+          </p>
+          <div style="font-size: 12px; color: #a5b4fc; font-weight: 600;">Weighted Score Formula: ∑(score × weight) / ∑(10 × weight) × 10</div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px;">
+          <div style="font-size: 28px; margin-bottom: 12px;">🎯</div>
+          <h4 style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Definitive Hiring Signals</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+            Generates objective hiring signals (Strong Hire, Hire, Lean Hire, Re-evaluate, No Hire) paired with specific conceptual evidence and strategic hiring justifications.
+          </p>
+          <div style="font-size: 12px; color: var(--color-basic); font-weight: 600;">✓ Automated executive summary & hiring justification</div>
+        </div>
+
+        <div class="glass-card" style="padding: 24px;">
+          <div style="font-size: 28px; margin-bottom: 12px;">📜</div>
+          <h4 style="font-size: 17px; font-weight: 600; margin-bottom: 8px;">Question-by-Question Audit</h4>
+          <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px;">
+            Full transcript logs every question, candidate answer, score, demonstrated concepts, missing nuances, and the internal adaptive engine rationale that triggered the next question.
+          </p>
+          <div style="font-size: 12px; color: #38bdf8; font-weight: 600;">🖨️ Printer-friendly executive PDF export ready</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="border-top: 1px solid var(--border-glass); padding: 32px 0; text-align: center; color: var(--text-muted); font-size: 13px; margin-top: 48px;">
+      <p>AI Interview Room Enterprise • Powered by Generative AI & Deterministic Cognitive Profiling</p>
+      <div style="margin-top: 8px; display: flex; justify-content: center; gap: 20px;">
+        <a href="/recruiter.html" style="color: var(--text-secondary); text-decoration: none;">Recruiter Portal</a>
+        <a href="/candidate-dashboard.html" style="color: var(--text-secondary); text-decoration: none;">Candidate Portal</a>
+        <a href="/report.html?id=demo-alex-101" style="color: var(--text-secondary); text-decoration: none;">Sample Report</a>
+      </div>
+    </footer>
+  </div>
+
+  <!-- AUTHENTICATION MODAL -->
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-content" style="max-width: 480px;">
+      <div class="modal-header">
+        <h3 id="authModalTitle" style="font-size: 18px; font-weight: 600;">Sign In to AI Interview Room</h3>
+        <button class="btn-close" id="btnCloseAuthModal">✕</button>
+      </div>
+
+      <div style="display: flex; border-bottom: 1px solid var(--border-glass);">
+        <div class="auth-tab active" id="tabLogin" onclick="switchAuthTab('login')">Sign In</div>
+        <div class="auth-tab" id="tabRegister" onclick="switchAuthTab('register')">Create Account</div>
+      </div>
+
+      <div class="modal-body">
+        <!-- Role Selector -->
+        <div style="margin-bottom: 18px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px;">Select User Role</label>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button type="button" class="btn btn-primary" id="roleRecruiterBtn" onclick="setAuthRole('recruiter')" style="padding: 10px; font-size: 13px;">
+              👔 Recruiter / Hiring
+            </button>
+            <button type="button" class="btn btn-secondary" id="roleCandidateBtn" onclick="setAuthRole('candidate')" style="padding: 10px; font-size: 13px;">
+              🎓 Candidate
+            </button>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm">
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="e.g. sarah.jenkins@techcorp.io" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 14px;">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="••••••••" required>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; font-size: 13px;">
+            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; color: var(--text-secondary);">
+              <input type="checkbox" id="rememberMe"> Remember Me
+            </label>
+            <a href="#" id="btnForgotPassword" style="color: var(--accent-primary); text-decoration: none;">Forgot Password?</a>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="padding: 12px;" id="loginSubmitBtn">
+            Sign In to Portal
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" style="display: none;">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="regFullName">Full Name *</label>
+            <input type="text" id="regFullName" placeholder="e.g. Sarah Jenkins" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="regEmail">Email Address *</label>
+            <input type="email" id="regEmail" placeholder="e.g. sarah@company.com" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="regPassword">Password *</label>
+            <input type="password" id="regPassword" placeholder="••••••••" required minlength="4">
+          </div>
+
+          <!-- Dynamic Role Fields -->
+          <div id="recruiterFields">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="regCompany">Company Name</label>
+              <input type="text" id="regCompany" placeholder="e.g. CloudScale Systems">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="regTitle">Recruiter Title</label>
+              <input type="text" id="regTitle" placeholder="e.g. Senior Talent Partner">
+            </div>
+          </div>
+
+          <div id="candidateFields" style="display: none;">
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="regJobRole">Target Job Role</label>
+              <input type="text" id="regJobRole" placeholder="e.g. Senior Python Developer">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+              <label for="regExpLevel">Experience Level</label>
+              <select id="regExpLevel">
+                <option value="Junior">Junior (0-2 years)</option>
+                <option value="Mid-Level" selected>Mid-Level (3-5 years)</option>
+                <option value="Senior">Senior (5-8 years)</option>
+                <option value="Lead">Lead / Architect (8+ years)</option>
+              </select>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; margin-top: 14px;" id="registerSubmitBtn">
+            Create Account
+          </button>
+        </form>
+
+        <!-- Quick Demo Switcher -->
+        <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--border-glass); text-align: center;">
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px;">⚡ Instant Demo Evaluation Access</p>
+          <div style="display: flex; gap: 8px; justify-content: center;">
+            <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="quickDemoLogin('recruiter')">
+              Demo Recruiter (Sarah)
+            </button>
+            <button type="button" class="btn btn-secondary" style="font-size: 12px; padding: 8px 12px;" onclick="quickDemoLogin('candidate')">
+              Demo Candidate (Alex)
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/static/js/landing.js"></script>
+</body>
+</html>

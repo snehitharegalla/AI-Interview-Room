@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recruiter Workspace | AI Interview Room Enterprise</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+  <style>
+    .view-section {
+      display: none;
+    }
+    .view-section.active {
+      display: block;
+      animation: fadeIn 0.25s ease-out;
+    }
+    .tag-selectable {
+      cursor: pointer;
+      user-select: none;
+      transition: var(--transition-fast);
+    }
+    .tag-selectable.selected {
+      background: var(--accent-primary) !important;
+      color: white !important;
+      border-color: var(--accent-primary) !important;
+    }
+    .review-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 13px;
+    }
+    .review-label {
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+    .review-val {
+      color: var(--text-primary);
+      font-weight: 600;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="recruiter-layout">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <a href="/" class="brand" style="text-decoration: none;">
+          <div class="brand-icon">⚡</div>
+          <span class="brand-name" style="font-size: 16px;">AI Interview Room</span>
+        </a>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="sidebar-link active" onclick="switchRecruiterView('dashboard', this)">
+          <span class="sidebar-icon">📊</span>
+          <span>Dashboard</span>
+        </div>
+        <div class="sidebar-link" onclick="switchRecruiterView('interviews', this)">
+          <span class="sidebar-icon">📋</span>
+          <span>Interviews</span>
+        </div>
+        <div class="sidebar-link" onclick="switchRecruiterView('candidates', this)">
+          <span class="sidebar-icon">👥</span>
+          <span>Candidates</span>
+        </div>
+        <div class="sidebar-link" onclick="switchRecruiterView('question-bank', this)">
+          <span class="sidebar-icon">📚</span>
+          <span>Question Bank</span>
+        </div>
+        <div class="sidebar-link" onclick="switchRecruiterView('reports', this)">
+          <span class="sidebar-icon">📑</span>
+          <span>Reports</span>
+        </div>
+        <div class="sidebar-link" onclick="switchRecruiterView('analytics', this)">
+          <span class="sidebar-icon">📈</span>
+          <span>Analytics</span>
+        </div>
+        <div class="sidebar-link" onclick="switchRecruiterView('settings', this)">
+          <span class="sidebar-icon">⚙️</span>
+          <span>Settings</span>
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-snippet">
+          <div class="user-avatar" id="recruiterAvatar">SJ</div>
+          <div>
+            <div style="font-size: 13px; font-weight: 600; line-height: 1.2;" id="recruiterNameLabel">Sarah Jenkins</div>
+            <div style="font-size: 11px; color: var(--text-muted);" id="recruiterOrgLabel">CloudScale Systems</div>
+          </div>
+        </div>
+        <button class="btn btn-secondary btn-sm" id="btnRecruiterLogout" title="Logout" style="padding: 4px 8px;">➔</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="main-content">
+      <!-- Top Navigation Header -->
+      <header class="top-header">
+        <div class="header-left">
+          <span style="font-size: 14px; font-weight: 600; color: var(--text-secondary);" id="breadcrumbTitle">Recruiter Hub / Dashboard</span>
+        </div>
+
+        <div class="header-right">
+          <!-- Notification Bell -->
+          <div style="position: relative;">
+            <button class="btn btn-secondary btn-sm" id="btnRecNotifsToggle">
+              🔔 <span id="recNotifBadge" style="background: var(--accent-primary); color: white; border-radius: 99px; padding: 2px 6px; font-size: 10px;">0</span>
+            </button>
+            <div class="notif-dropdown" id="recNotifDropdown">
+              <div style="padding: 10px 16px; border-bottom: 1px solid var(--border-glass); font-weight: 600; font-size: 13px; display: flex; justify-content: space-between;">
+                <span>Recruiter Notifications</span>
+                <a href="#" onclick="markAllNotificationsRead(event)" style="font-size: 11px; color: var(--accent-primary); text-decoration: none;">Mark all read</a>
+              </div>
+              <div id="recNotifsList" style="max-height: 280px; overflow-y: auto;">
+                <!-- Dynamic notifications -->
+              </div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-sm" id="btnLaunchWizard" style="display: flex; align-items: center; gap: 6px;">
+            <span>+</span>
+            <span>Create Interview</span>
+          </button>
+        </div>
+      </header>
+
+      <div class="page-body">
+        <!-- ==========================================
+             VIEW 1: DASHBOARD
+             ========================================== -->
+        <section id="view-dashboard" class="view-section active">
+          <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+              <h1 style="font-size: 24px; font-weight: 700;">Recruitment Operations Dashboard</h1>
+              <p style="color: var(--text-secondary); font-size: 13px; margin-top: 2px;">Real-time metrics, active interview tracking, and candidate cognitive evaluations.</p>
+            </div>
+          </div>
+
+          <!-- KPI Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Total Candidates</span>
+                <span>👥</span>
+              </div>
+              <div class="kpi-value" id="kpiTotalCandidates">0</div>
+              <div class="kpi-subtitle">Registered talent profiles</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Active Interviews</span>
+                <span>⚡</span>
+              </div>
+              <div class="kpi-value" id="kpiActiveInterviews">0</div>
+              <div class="kpi-subtitle">In progress or assigned</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Completed Interviews</span>
+                <span>✅</span>
+              </div>
+              <div class="kpi-value" id="kpiCompletedInterviews">0</div>
+              <div class="kpi-subtitle">Evaluated with depth-weighted reports</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-header">
+                <span>Average Candidate Score</span>
+                <span>🎯</span>
+              </div>
+              <div class="kpi-value" id="kpiAverageScore">0.0 <span style="font-size: 16px; color: var(--text-muted);">/ 10</span></div>
+              <div class="kpi-subtitle">Fair depth-weighted average</div>
+            </div>
+          </div>
+
+          <!-- Recent Interviews Table -->
+          <div class="table-card">
+            <div class="table-toolbar">
+              <h3 style="font-size: 16px; font-weight: 600;">Recent Adaptive Interviews</h3>
+              <button class="btn btn-secondary btn-sm" onclick="switchRecruiterView('interviews')">View All Interviews ➔</button>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Assessment Title</th>
+                  <th>Target Role</th>
+                  <th>Status</th>
+                  <th>Score</th>
+                  <th>Started</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recentInterviewsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    Loading recent interviews...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 2: INTERVIEWS LIST
+             ========================================== -->
+        <section id="view-interviews" class="view-section">
+          <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h1 style="font-size: 24px; font-weight: 700;">Interview Management</h1>
+              <p style="color: var(--text-secondary); font-size: 13px;">Manage and audit all adaptive assessments.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openWizardModal()">+ New Interview</button>
+          </div>
+
+          <div class="table-card">
+            <div class="table-toolbar">
+              <div style="display: flex; gap: 12px; flex: 1; max-width: 500px;">
+                <input type="text" id="interviewSearchInput" placeholder="Search by candidate or assessment title..." style="width: 100%; font-size: 13px;">
+              </div>
+              <div style="display: flex; gap: 10px;">
+                <select id="interviewStatusFilter" style="font-size: 13px;">
+                  <option value="all">All Statuses</option>
+                  <option value="assigned">Assigned</option>
+                  <option value="in_progress">In Progress</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Title & Topics</th>
+                  <th>Questions</th>
+                  <th>Status</th>
+                  <th>Depth Score</th>
+                  <th>Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="allInterviewsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    Loading interviews...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 3: CANDIDATES DIRECTORY
+             ========================================== -->
+        <section id="view-candidates" class="view-section">
+          <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 24px; font-weight: 700;">Candidate Talent Directory</h1>
+            <p style="color: var(--text-secondary); font-size: 13px;">Review candidate profiles, skill verification, and multi-dimensional knowledge profiles.</p>
+          </div>
+
+          <div class="table-card">
+            <div class="table-toolbar">
+              <div style="display: flex; gap: 12px; flex: 1; max-width: 480px;">
+                <input type="text" id="candidateSearchInput" placeholder="Search candidate by name, email, or role..." style="width: 100%; font-size: 13px;">
+              </div>
+            </div>
+
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Applied Role</th>
+                  <th>Experience</th>
+                  <th>Assessment Status</th>
+                  <th>Latest Score</th>
+                  <th>Interview Date</th>
+                  <th>Profile & Knowledge Map</th>
+                </tr>
+              </thead>
+              <tbody id="candidatesTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    Loading candidate directory...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 4: QUESTION BANK
+             ========================================== -->
+        <section id="view-question-bank" class="view-section">
+          <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+            <div>
+              <h1 style="font-size: 24px; font-weight: 700;">Question Bank</h1>
+              <p style="color: var(--text-secondary); font-size: 13px;">Curate and configure interview seed questions across topics, roles, and categories.</p>
+            </div>
+            <button class="btn btn-primary btn-sm" onclick="openAddQuestionModal()">+ Add New Question</button>
+          </div>
+
+          <!-- Filters Toolbar -->
+          <div class="glass-card" style="padding: 16px 20px; margin-bottom: 24px;">
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr 1fr; gap: 12px;">
+              <input type="text" id="qBankSearch" placeholder="Search questions, concepts, keywords..." style="font-size: 13px;">
+              <select id="qBankTopicFilter" style="font-size: 13px;">
+                <option value="all">All Topics</option>
+                <option value="Python">Python</option>
+                <option value="Java">Java</option>
+                <option value="SQL">SQL & Databases</option>
+                <option value="OOP">OOP & System Design</option>
+                <option value="Data Structures">Data Structures</option>
+                <option value="Machine Learning">Machine Learning</option>
+                <option value="Cloud">Cloud & DevOps</option>
+                <option value="Web Development">Web Development</option>
+                <option value="Behavioral">Behavioral</option>
+              </select>
+              <select id="qBankDifficultyFilter" style="font-size: 13px;">
+                <option value="all">All Difficulties</option>
+                <option value="basic">Basic / Fundamentals</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+              <select id="qBankTypeFilter" style="font-size: 13px;">
+                <option value="all">All Question Types</option>
+                <option value="Technical">Technical</option>
+                <option value="Conceptual">Conceptual</option>
+                <option value="Scenario-based">Scenario-based</option>
+                <option value="Problem-solving">Problem-solving</option>
+                <option value="Behavioral">Behavioral</option>
+              </select>
+              <select id="qBankRoleFilter" style="font-size: 13px;">
+                <option value="all">All Target Roles</option>
+                <option value="Backend Engineer">Backend Engineer</option>
+                <option value="Senior Backend Engineer">Senior Backend Engineer</option>
+                <option value="Software Engineer">Software Engineer</option>
+                <option value="Core Systems Engineer">Core Systems Engineer</option>
+                <option value="Software Architect">Software Architect</option>
+                <option value="Senior Database Engineer">Senior Database Engineer</option>
+                <option value="Data Analyst">Data Analyst</option>
+                <option value="Java Engineer">Java Engineer</option>
+                <option value="Senior Java Architect">Senior Java Architect</option>
+                <option value="Machine Learning Engineer">Machine Learning Engineer</option>
+                <option value="AI / NLP Engineer">AI / NLP Engineer</option>
+                <option value="Cloud Architect">Cloud Architect</option>
+                <option value="DevOps Engineer">DevOps Engineer</option>
+                <option value="Frontend Engineer">Frontend Engineer</option>
+                <option value="Senior Engineer / Tech Lead">Senior Tech Lead</option>
+              </select>
+            </div>
+          </div>
+
+          <div id="qBankItemsContainer">
+            <!-- Dynamic question cards -->
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 5: REPORTS DIRECTORY
+             ========================================== -->
+        <section id="view-reports" class="view-section">
+          <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 24px; font-weight: 700;">Candidate Evaluation Reports</h1>
+            <p style="color: var(--text-secondary); font-size: 13px;">Access detailed cognitive profiles, depth-weighted scoring, and question audit logs.</p>
+          </div>
+
+          <div class="table-card">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Candidate</th>
+                  <th>Assessment Title</th>
+                  <th>Hiring Recommendation</th>
+                  <th>Raw Score</th>
+                  <th>Depth-Weighted Score</th>
+                  <th>Report Date</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="reportsTableBody">
+                <tr>
+                  <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    Loading evaluation reports...
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 6: ANALYTICS
+             ========================================== -->
+        <section id="view-analytics" class="view-section">
+          <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 24px; font-weight: 700;">Recruitment Analytics & Insights</h1>
+            <p style="color: var(--text-secondary); font-size: 13px;">Aggregated metrics on candidate performance, completion rates, and topic mastery.</p>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-header"><span>Completion Rate</span><span>📊</span></div>
+              <div class="kpi-value" id="analyticsCompletionRate">0%</div>
+              <div class="kpi-subtitle">Assessments finished vs assigned</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span>Evaluated Candidates</span><span>👥</span></div>
+              <div class="kpi-value" id="analyticsEvaluatedCount">0</div>
+              <div class="kpi-subtitle">Completed assessment runs</div>
+            </div>
+            <div class="kpi-card">
+              <div class="kpi-header"><span>Average Depth Score</span><span>⚖️</span></div>
+              <div class="kpi-value" id="analyticsAvgDepthScore">0.0</div>
+              <div class="kpi-subtitle">Depth-weighted hiring baseline</div>
+            </div>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); gap: 24px; margin-bottom: 32px;">
+            <!-- Topic Performance Card -->
+            <div class="glass-card" style="padding: 24px;">
+              <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Topic Mastery Distribution</h3>
+              <div id="analyticsTopicBars">
+                <!-- Dynamic topic bars -->
+              </div>
+            </div>
+
+            <!-- Difficulty Distribution Card -->
+            <div class="glass-card" style="padding: 24px;">
+              <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Difficulty Levels Evaluated</h3>
+              <div id="analyticsDifficultyBars">
+                <!-- Dynamic difficulty bars -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ==========================================
+             VIEW 7: SETTINGS
+             ========================================== -->
+        <section id="view-settings" class="view-section">
+          <div style="margin-bottom: 24px;">
+            <h1 style="font-size: 24px; font-weight: 700;">Workspace Settings</h1>
+            <p style="color: var(--text-secondary); font-size: 13px;">Organization details and AI provider configuration.</p>
+          </div>
+
+          <div class="glass-card" style="padding: 28px; max-width: 700px;">
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">AI Provider Status</h3>
+            <div style="padding: 16px; background: rgba(0,0,0,0.2); border-radius: 10px; margin-bottom: 20px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                <span style="color: var(--text-secondary); font-size: 13px;">Active AI Engine</span>
+                <span class="badge-tag badge-adaptive" id="settingsAiProvider">Checking...</span>
+              </div>
+              <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">
+                Configured via environment variables (Gemini, OpenAI, or intelligent cognitive simulation).
+              </div>
+              <div style="display: flex; align-items: center; gap: 12px;">
+                <button type="button" class="btn btn-secondary btn-sm" id="btnTestAiConnection" onclick="testAiConnection()" style="font-size: 12px; padding: 6px 12px;">
+                  ⚡ Test Engine Health & Latency
+                </button>
+                <span id="aiTestResult" style="font-size: 12px; color: var(--color-basic);"></span>
+              </div>
+            </div>
+
+            <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px;">Organization Information</h3>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label>Organization Name</label>
+              <input type="text" id="settingsOrgName" value="CloudScale Systems" readonly>
+            </div>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label>Recruiter Full Name</label>
+              <input type="text" id="settingsRecruiterName" value="Sarah Jenkins" readonly>
+            </div>
+            <div class="form-group" style="margin-bottom: 14px;">
+              <label>Contact Email</label>
+              <input type="text" id="settingsRecruiterEmail" value="sarah.jenkins@techcorp.io" readonly>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       7-STEP INTERVIEW CREATION WIZARD MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="wizardModal">
+    <div class="modal-content modal-content-lg">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 18px; font-weight: 700;">Configure Adaptive Technical Interview</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Multi-step configuration orchestrating AI boundaries</p>
+        </div>
+        <button class="btn-close" onclick="closeWizardModal()">✕</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Stepper Indicator -->
+        <div class="wizard-stepper">
+          <div class="step-item active" id="wizardStepIndicator-1">
+            <div class="step-circle">1</div>
+            <div class="step-label">Basic Info</div>
+          </div>
+          <div class="step-item" id="wizardStepIndicator-2">
+            <div class="step-circle">2</div>
+            <div class="step-label">Topics</div>
+          </div>
+          <div class="step-item" id="wizardStepIndicator-3">
+            <div class="step-circle">3</div>
+            <div class="step-label">Difficulty</div>
+          </div>
+          <div class="step-item" id="wizardStepIndicator-4">
+            <div class="step-circle">4</div>
+            <div class="step-label">Settings</div>
+          </div>
+          <div class="step-item" id="wizardStepIndicator-5">
+            <div class="step-circle">5</div>
+            <div class="step-label">Questions</div>
+          </div>
+          <div class="step-item" id="wizardStepIndicator-6">
+            <div class="step-circle">6</div>
+            <div class="step-label">Candidate</div>
+          </div>
+          <div class="step-item" id="wizardStepIndicator-7">
+            <div class="step-circle">7</div>
+            <div class="step-label">Review</div>
+          </div>
+        </div>
+
+        <form id="wizardForm">
+          <!-- STEP 1: Basic Information -->
+          <div class="step-content active" id="wizardStep-1">
+            <h4 style="font-size: 16px; margin-bottom: 6px;">Step 1: Basic Information</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">Define the target role and position level for this interview.</p>
+
+            <div class="form-grid">
+              <div class="form-group form-group-full">
+                <label for="wzTitle">Interview Title *</label>
+                <input type="text" id="wzTitle" placeholder="e.g. Senior Python & Distributed Systems Assessment" required>
+              </div>
+
+              <div class="form-group">
+                <label for="wzJobRole">Target Job Role *</label>
+                <input type="text" id="wzJobRole" placeholder="e.g. Senior Backend Engineer" required>
+              </div>
+
+              <div class="form-group">
+                <label for="wzExpLevel">Experience Level *</label>
+                <select id="wzExpLevel" required>
+                  <option value="Junior">Junior (0 - 2 years)</option>
+                  <option value="Mid-Level" selected>Mid-Level (3 - 5 years)</option>
+                  <option value="Senior">Senior (5 - 8 years)</option>
+                  <option value="Lead / Architect">Lead / Architect (8+ years)</option>
+                </select>
+              </div>
+
+              <div class="form-group form-group-full">
+                <label for="wzDescription">Interview Description & Objectives</label>
+                <textarea id="wzDescription" rows="3" placeholder="Describe the evaluation scope, technical focus, and architectural expectations..."></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 2: Topics -->
+          <div class="step-content" id="wizardStep-2">
+            <h4 style="font-size: 16px; margin-bottom: 6px;">Step 2: Technical Focus Areas</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Select core technical topics the adaptive engine will explore.</p>
+
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px;" id="wzTopicsContainer">
+              <div class="topic-chip active" data-topic="Python">Python</div>
+              <div class="topic-chip active" data-topic="Data Structures">Data Structures</div>
+              <div class="topic-chip active" data-topic="System Design">System Design</div>
+              <div class="topic-chip" data-topic="SQL">SQL</div>
+              <div class="topic-chip" data-topic="Java">Java</div>
+              <div class="topic-chip" data-topic="OOP">OOP</div>
+              <div class="topic-chip" data-topic="Machine Learning">Machine Learning</div>
+              <div class="topic-chip" data-topic="Cloud">Cloud</div>
+              <div class="topic-chip" data-topic="Web Development">Web Development</div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <input type="text" id="wzCustomTopicInput" placeholder="Add custom topic (e.g. Kafka, Docker, GraphQL)..." style="flex: 1; font-size: 13px;">
+              <button type="button" class="btn btn-secondary" onclick="addCustomWizardTopic()">+ Add Topic</button>
+            </div>
+          </div>
+
+          <!-- STEP 3: Difficulty -->
+          <div class="step-content" id="wizardStep-3">
+            <h4 style="font-size: 16px; margin-bottom: 6px;">Step 3: Difficulty & Dynamic Range</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">Set baseline difficulty and allowable adaptive boundaries.</p>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="wzDifficulty">Starting Difficulty</label>
+                <select id="wzDifficulty">
+                  <option value="basic">Beginner / Basic</option>
+                  <option value="intermediate" selected>Intermediate</option>
+                  <option value="advanced">Advanced</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="wzDifficultyRange">Allowable Difficulty Range</label>
+                <select id="wzDifficultyRange">
+                  <option value="all" selected>Full Range Adaptive (Basic to Advanced)</option>
+                  <option value="intermediate_advanced">Intermediate to Advanced</option>
+                  <option value="basic_intermediate">Beginner to Intermediate</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 4: Interview Settings -->
+          <div class="step-content" id="wizardStep-4">
+            <h4 style="font-size: 16px; margin-bottom: 6px;">Step 4: Interview Execution Settings</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">Configure timing, question depth, and cognitive safeguards.</p>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="wzTotalQuestions">Number of Questions</label>
+                <select id="wzTotalQuestions">
+                  <option value="3">3 Questions (Quick Assessment)</option>
+                  <option value="5" selected>5 Questions (Standard Technical)</option>
+                  <option value="7">7 Questions (Comprehensive Assessment)</option>
+                  <option value="10">10 Questions (Deep Dive Architecture)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="wzDuration">Session Duration</label>
+                <select id="wzDuration">
+                  <option value="15">15 Minutes</option>
+                  <option value="30" selected>30 Minutes</option>
+                  <option value="45">45 Minutes</option>
+                  <option value="60">60 Minutes</option>
+                </select>
+              </div>
+
+              <div class="form-group form-group-full">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
+                  <input type="checkbox" id="wzAdaptiveMode" checked>
+                  <strong>Enable True Conceptual Adaptive Engine</strong>
+                </label>
+                <p style="font-size: 12px; color: var(--text-muted); margin-left: 24px;">
+                  Dynamically crafts questions based on missing concepts and diagnostic probes rather than static progression.
+                </p>
+              </div>
+
+              <div class="form-group form-group-full">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; margin-bottom: 8px;">
+                  <input type="checkbox" id="wzAllowFollowups" checked>
+                  <strong>Allow Deep Surgical Follow-Up Questions</strong>
+                </label>
+                <p style="font-size: 12px; color: var(--text-muted); margin-left: 24px;">
+                  Permits the AI to pinpoint omitted mechanisms and ask focused follow-ups on the same topic.
+                </p>
+              </div>
+
+              <div class="form-group form-group-full">
+                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                  <input type="checkbox" id="wzPreventRepeated" checked>
+                  <strong>Strictly Prevent Repeated Questions</strong>
+                </label>
+                <p style="font-size: 12px; color: var(--text-muted); margin-left: 24px;">
+                  Prevents duplicate or semantically overlapping questions throughout the interview.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 5: Question Configuration -->
+          <div class="step-content" id="wizardStep-5">
+            <h4 style="font-size: 16px; margin-bottom: 6px;">Step 5: Question Configuration & Categories</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Select question categories and optional starter questions from the Question Bank.</p>
+
+            <div style="margin-bottom: 18px;">
+              <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Permitted Question Categories</label>
+              <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                <label class="topic-chip active" style="cursor: pointer;"><input type="checkbox" class="wz-cat-check" value="Technical" checked style="display:none;"> Technical</label>
+                <label class="topic-chip active" style="cursor: pointer;"><input type="checkbox" class="wz-cat-check" value="Conceptual" checked style="display:none;"> Conceptual</label>
+                <label class="topic-chip active" style="cursor: pointer;"><input type="checkbox" class="wz-cat-check" value="Scenario-based" checked style="display:none;"> Scenario-based</label>
+                <label class="topic-chip" style="cursor: pointer;"><input type="checkbox" class="wz-cat-check" value="Problem-solving" style="display:none;"> Problem-solving</label>
+                <label class="topic-chip" style="cursor: pointer;"><input type="checkbox" class="wz-cat-check" value="Behavioral" style="display:none;"> Behavioral</label>
+              </div>
+            </div>
+
+            <div>
+              <label style="font-size: 13px; font-weight: 600; display: block; margin-bottom: 8px;">Starter Benchmark Question</label>
+              <div style="display: flex; gap: 10px; align-items: center;">
+                <select id="wzStarterQuestion" style="flex: 1; font-size: 13px;">
+                  <option value="auto">Auto-Generate Baseline with AI (Recommended)</option>
+                  <!-- Loaded from question bank -->
+                </select>
+                <button type="button" class="btn btn-secondary btn-sm" onclick="previewWizardStarterQuestion()" style="font-size: 12px; padding: 9px 14px; white-space: nowrap;">
+                  👁️ Preview
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 6: Candidate Assignment -->
+          <div class="step-content" id="wizardStep-6">
+            <h4 style="font-size: 16px; margin-bottom: 6px;">Step 6: Candidate Assignment</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 20px;">Assign this interview to an existing candidate or invite a new one.</p>
+
+            <div class="form-grid">
+              <div class="form-group form-group-full">
+                <label for="wzSelectExistingCandidate">Assign Existing Candidate</label>
+                <select id="wzSelectExistingCandidate">
+                  <option value="">-- Or enter new candidate below --</option>
+                  <!-- Populated dynamically -->
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="wzCandidateName">Candidate Full Name</label>
+                <input type="text" id="wzCandidateName" placeholder="e.g. Alex Rivera">
+              </div>
+
+              <div class="form-group">
+                <label for="wzCandidateEmail">Candidate Email Address</label>
+                <input type="email" id="wzCandidateEmail" placeholder="e.g. alex.rivera@example.com">
+              </div>
+            </div>
+          </div>
+
+          <!-- STEP 7: Review -->
+          <div class="step-content" id="wizardStep-7">
+            <h4 style="font-size: 16px; margin-bottom: 6px;">Step 7: Final Review & Confirmation</h4>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">Verify all configured boundaries before creating the interview.</p>
+
+            <div class="glass-card" style="padding: 18px 24px; background: rgba(0,0,0,0.3);">
+              <div class="review-row">
+                <span class="review-label">Assessment Title</span>
+                <span class="review-val" id="revTitle">-</span>
+              </div>
+              <div class="review-row">
+                <span class="review-label">Target Role</span>
+                <span class="review-val" id="revRole">-</span>
+              </div>
+              <div class="review-row">
+                <span class="review-label">Experience Tier</span>
+                <span class="review-val" id="revExp">-</span>
+              </div>
+              <div class="review-row">
+                <span class="review-label">Focus Topics</span>
+                <span class="review-val" id="revTopics">-</span>
+              </div>
+              <div class="review-row">
+                <span class="review-label">Difficulty & Range</span>
+                <span class="review-val" id="revDifficulty">-</span>
+              </div>
+              <div class="review-row">
+                <span class="review-label">Question Count & Duration</span>
+                <span class="review-val" id="revQuestions">-</span>
+              </div>
+              <div class="review-row">
+                <span class="review-label">Assigned Candidate</span>
+                <span class="review-val" id="revCandidate">-</span>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="wzPrevBtn" onclick="wizardPrevStep()" style="display: none;">Back</button>
+        <button type="button" class="btn btn-primary" id="wzNextBtn" onclick="wizardNextStep()">Next Step ➔</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       ADD QUESTION BANK ITEM MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="addQuestionModal">
+    <div class="modal-content" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 style="font-size: 18px; font-weight: 700;">Add Question to Bank</h3>
+        <button class="btn-close" onclick="closeAddQuestionModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="addQuestionForm">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="qTitle">Question Title *</label>
+            <input type="text" id="qTitle" placeholder="e.g. B-Tree Leaf Node Splits in MySQL" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="qText">Question Prompt *</label>
+            <textarea id="qText" rows="3" placeholder="Full question description or scenario..." required></textarea>
+          </div>
+          <div class="form-grid" style="margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="qTopic">Topic *</label>
+              <input type="text" id="qTopic" placeholder="e.g. SQL, Python, Java" required>
+            </div>
+            <div class="form-group">
+              <label for="qDifficulty">Difficulty *</label>
+              <select id="qDifficulty" required>
+                <option value="basic">Basic</option>
+                <option value="intermediate" selected>Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid" style="margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="qType">Question Type</label>
+              <select id="qType">
+                <option value="Technical">Technical</option>
+                <option value="Conceptual">Conceptual</option>
+                <option value="Scenario-based">Scenario-based</option>
+                <option value="Problem-solving">Problem-solving</option>
+                <option value="Behavioral">Behavioral</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="qJobRole">Target Role</label>
+              <input type="text" id="qJobRole" value="Software Engineer">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="qTargetConcept">Target Concept / Mechanism</label>
+            <input type="text" id="qTargetConcept" placeholder="e.g. B-Tree page splitting, write amplification">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" style="padding: 12px; margin-top: 16px;">
+            Save to Question Bank
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       CANDIDATE PROFILE & KNOWLEDGE MAP MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="candidateProfileModal">
+    <div class="modal-content modal-content-lg">
+      <div class="modal-header">
+        <div>
+          <h3 style="font-size: 18px; font-weight: 700;" id="candModalName">Candidate Profile</h3>
+          <p style="font-size: 12px; color: var(--text-muted);" id="candModalRole">Role and verified cognitive profile</p>
+        </div>
+        <button class="btn-close" onclick="closeCandidateProfileModal()">✕</button>
+      </div>
+      <div class="modal-body" id="candModalBody">
+        <!-- Dynamic candidate profile & knowledge maps -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       PREVIEW QUESTION MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="previewQuestionModal">
+    <div class="modal-content" style="max-width: 650px;">
+      <div class="modal-header">
+        <div>
+          <span class="badge-tag badge-adaptive" id="prevQBadgeType">Technical</span>
+          <h3 style="font-size: 18px; font-weight: 700; margin-top: 4px;" id="prevQTitle">Question Preview</h3>
+        </div>
+        <button class="btn-close" onclick="closePreviewQuestionModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+          <span class="badge-tag" id="prevQTopic">Topic: Python</span>
+          <span class="badge-tag" id="prevQDifficulty">Difficulty: Intermediate</span>
+          <span class="badge-tag" id="prevQRole">Target: Backend Engineer</span>
+        </div>
+        
+        <div class="question-text-box" style="margin-bottom: 18px;">
+          <label style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); display: block; margin-bottom: 6px;">Prompt / Scenario</label>
+          <div id="prevQText" style="font-size: 15px; color: var(--text-primary); line-height: 1.6;"></div>
+        </div>
+
+        <div id="prevQTargetConceptBox" style="margin-bottom: 16px; padding: 12px; background: rgba(99, 102, 241, 0.08); border-radius: 8px; border: 1px solid rgba(99, 102, 241, 0.2);">
+          <div style="font-size: 12px; font-weight: 600; color: #a5b4fc; margin-bottom: 4px;">🎯 Target Conceptual Mechanism</div>
+          <div id="prevQTargetConcept" style="font-size: 13px; color: var(--text-secondary);"></div>
+        </div>
+
+        <div id="prevQKeyPointsBox" style="margin-bottom: 20px;">
+          <div style="font-size: 12px; font-weight: 600; text-transform: uppercase; color: var(--text-muted); margin-bottom: 8px;">Expected Key Evaluation Criteria</div>
+          <ul id="prevQKeyPointsList" style="padding-left: 20px; font-size: 13px; color: var(--text-secondary); line-height: 1.7;">
+          </ul>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-secondary" onclick="closePreviewQuestionModal()">Close Preview</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================
+       EDIT QUESTION MODAL
+       ========================================== -->
+  <div class="modal-overlay" id="editQuestionModal">
+    <div class="modal-content" style="max-width: 650px;">
+      <div class="modal-header">
+        <h3 style="font-size: 18px; font-weight: 700;">Edit Question</h3>
+        <button class="btn-close" onclick="closeEditQuestionModal()">✕</button>
+      </div>
+      <div class="modal-body">
+        <form id="editQuestionForm" onsubmit="handleSaveEditQuestion(event)">
+          <input type="hidden" id="editQId">
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="editQTitle">Question Title *</label>
+            <input type="text" id="editQTitle" required>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="editQText">Question Prompt *</label>
+            <textarea id="editQText" rows="3" required></textarea>
+          </div>
+          <div class="form-grid" style="margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="editQTopic">Topic *</label>
+              <input type="text" id="editQTopic" required>
+            </div>
+            <div class="form-group">
+              <label for="editQDifficulty">Difficulty *</label>
+              <select id="editQDifficulty" required>
+                <option value="basic">Basic</option>
+                <option value="intermediate">Intermediate</option>
+                <option value="advanced">Advanced</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-grid" style="margin-bottom: 12px;">
+            <div class="form-group">
+              <label for="editQType">Question Type</label>
+              <select id="editQType">
+                <option value="Technical">Technical</option>
+                <option value="Conceptual">Conceptual</option>
+                <option value="Scenario-based">Scenario-based</option>
+                <option value="Problem-solving">Problem-solving</option>
+                <option value="Behavioral">Behavioral</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="editQJobRole">Target Role</label>
+              <input type="text" id="editQJobRole">
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom: 12px;">
+            <label for="editQTargetConcept">Target Concept / Mechanism</label>
+            <input type="text" id="editQTargetConcept">
+          </div>
+          <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 18px;">
+            <button type="button" class="btn btn-secondary" onclick="closeEditQuestionModal()">Cancel</button>
+            <button type="submit" class="btn btn-primary" id="btnSaveEditQuestion">Save Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/static/js/recruiter.js"></script>
+</body>
+</html>

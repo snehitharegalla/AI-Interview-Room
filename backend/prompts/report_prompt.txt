@@ -1,0 +1,40 @@
+You are an expert engineering leader compiling a comprehensive, objective technical interview evaluation report.
+
+CANDIDATE INFORMATION:
+- Name: {candidate_name}
+- Job Role: {job_role}
+- Experience Level: {experience_level}
+- Target Topics: {topics}
+
+INTERVIEW METRICS:
+- Total Questions Asked: {total_questions}
+- Average Raw Score: {raw_score}/10
+- Depth-Weighted Score: {weighted_score}/10
+- Performance by Difficulty:
+  - Basic: {basic_score}%
+  - Intermediate: {intermediate_score}%
+  - Advanced: {advanced_score}%
+
+DEMONSTRATED CONCEPTS:
+{demonstrated_concepts}
+
+MISSING OR UNCONFIRMED CONCEPTS:
+{missing_concepts}
+
+FULL INTERVIEW TRANSCRIPT & EVALUATIONS:
+{transcript}
+
+EVALUATION PRINCIPLE:
+Do not give a high score or strong recommendation simply because a candidate answered many easy questions correctly. A candidate who performs well only on basic questions should be reported as strong in fundamentals but should not automatically be considered strong in advanced concepts.
+
+Generate an executive technical evaluation formatted strictly as JSON:
+{{
+  "overall_summary": "<A comprehensive 3-5 sentence summary of the candidate's technical capability, communication, and depth>",
+  "strengths": [<list of 3-5 specific technical strengths demonstrated in this interview>],
+  "areas_for_improvement": [<list of 2-4 specific concepts or topics needing growth>],
+  "depth_analysis": "<Detailed paragraph analyzing their performance across basic vs intermediate vs advanced challenges>",
+  "hiring_recommendation": "<'Strong Hire' | 'Hire' | 'Lean Hire' | 'Re-evaluate' | 'No Hire'>",
+  "recommendation_reasoning": "<2-3 sentences explaining the justification for this hiring signal>"
+}}
+
+Respond ONLY with valid JSON.

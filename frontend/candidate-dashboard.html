@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidate Portal | AI Interview Room</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Top Nav -->
+    <header class="navbar">
+      <a href="/" class="brand">
+        <div class="brand-icon">⚡</div>
+        <span class="brand-name">AI Interview Room</span>
+      </a>
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <span style="font-size: 13px; color: var(--text-secondary);" id="candidateNameBadge">Candidate: Loading...</span>
+        <div style="position: relative;">
+          <button class="btn btn-secondary" id="btnNotifsToggle" style="padding: 8px 12px; font-size: 13px;">
+            🔔 <span id="notifBadgeCount" style="background: var(--accent-primary); color: white; border-radius: 99px; padding: 2px 6px; font-size: 11px;">0</span>
+          </button>
+          <div class="notif-dropdown" id="notifDropdown">
+            <div style="padding: 10px 16px; border-bottom: 1px solid var(--border-glass); font-weight: 600; font-size: 13px; display: flex; justify-content: space-between;">
+              <span>Notifications</span>
+              <a href="#" onclick="markAllNotificationsRead(event)" style="font-size: 11px; color: var(--accent-primary); text-decoration: none;">Mark all read</a>
+            </div>
+            <div id="notifsList" style="max-height: 280px; overflow-y: auto;">
+              <!-- Dynamic notifs -->
+            </div>
+          </div>
+        </div>
+        <button class="btn btn-secondary" id="btnLogout" style="padding: 8px 14px; font-size: 13px;">Logout</button>
+      </div>
+    </header>
+
+    <!-- Welcome Hero -->
+    <div style="margin-bottom: 28px;">
+      <h1 style="font-size: 28px; font-weight: 700; margin-bottom: 6px;">Candidate Assessment Portal</h1>
+      <p style="color: var(--text-secondary); font-size: 14px;">Review your assigned adaptive assessments and begin when you are ready.</p>
+    </div>
+
+    <!-- KPI Metric Summary -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span>Assigned Assessments</span>
+          <span>📋</span>
+        </div>
+        <div class="kpi-value" id="kpiAssignedCount">0</div>
+        <div class="kpi-subtitle">Ready to be started</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span>In-Progress</span>
+          <span>⏳</span>
+        </div>
+        <div class="kpi-value" id="kpiInProgressCount">0</div>
+        <div class="kpi-subtitle">Can be resumed</div>
+      </div>
+
+      <div class="kpi-card">
+        <div class="kpi-header">
+          <span>Completed</span>
+          <span>✅</span>
+        </div>
+        <div class="kpi-value" id="kpiCompletedCount">0</div>
+        <div class="kpi-subtitle">Submitted for recruiter evaluation</div>
+      </div>
+    </div>
+
+    <!-- Active Assessments Card -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div>
+          <h3 style="font-size: 16px; font-weight: 600;">Assigned & Active Assessments</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Select an assessment to begin your adaptive interview session.</p>
+        </div>
+      </div>
+
+      <div id="activeInterviewsContainer">
+        <!-- Dynamic list -->
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Assessment Name</th>
+              <th>Target Role</th>
+              <th>Questions</th>
+              <th>Duration</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="activeInterviewsTableBody">
+            <tr>
+              <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                Loading your assigned interviews...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Completed Assessments Card -->
+    <div class="table-card">
+      <div class="table-toolbar">
+        <div>
+          <h3 style="font-size: 16px; font-weight: 600;">Completed Assessments</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">Your responses have been securely delivered to the recruiting team.</p>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Assessment Name</th>
+            <th>Target Role</th>
+            <th>Submitted On</th>
+            <th>Status</th>
+            <th>Recruitment Status</th>
+          </tr>
+        </thead>
+        <tbody id="completedInterviewsTableBody">
+          <tr>
+            <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 30px;">
+              No completed assessments yet.
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="/static/js/candidate.js"></script>
+</body>
+</html>
